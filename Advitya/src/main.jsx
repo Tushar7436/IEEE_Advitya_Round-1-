@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App';
-import HomePage from './Pages/HomePage';
+import HomePage from './pages/HomePage';
 import Riddles from './pages/Riddles';
 import MiddlePage from './pages/MiddlePage';
 import LastPage from './pages/LastPage';
@@ -14,11 +14,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Router>
       <Routes>
         <Route path="/" element={<App />}> 
-          <Route index element={<HomePage />} />
-          <Route path="riddles" element={<Riddles />} />
+          <Route index element={<HomePage/>} />
+          <Route path="riddles" element={<Riddles/>} />
           <Route path="qr-key" element={<MiddlePage />} />
-          <Route path="thank-you" element={<LastPage
-         />} />
+          <Route path="thank-you" element={<LastPage/>} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
