@@ -1,9 +1,11 @@
-function App() {
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://ieeeadvityaround-1-production.up.railway.app/';
+
+export default function App() {
   return (
     <div className="text-center">
-      <h1>Advitya</h1>
+      <p>Backend Connected: {axios.defaults.baseURL}</p>
     </div>
   );
 }
-
-export default App;
