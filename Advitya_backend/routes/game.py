@@ -45,7 +45,8 @@ def start_game(data: TeamStart):
         "current_riddle_id": str(first_riddle["_id"]),
         "completed": False,
         "score": 0,
-        "riddle_count": 1
+        "riddle_count": 1,
+        "start_time": datetime.utcnow()  # Store game start time in UTC
     }
     
     teams_collection.insert_one(team_data)
@@ -54,15 +55,15 @@ def start_game(data: TeamStart):
         "team_name": data.team_name,
         "riddle_id": str(first_riddle["_id"]),
         "question": first_riddle["question"]
-    }  
-
+    }
 
 class AnswerSubmission(BaseModel):
     team_name: str
     riddle_id: str
     answer: str
 
-@app.post("/submit-answer")
+
+@router.post("/submit-answer")
 def submit_answer(data: AnswerSubmission):
     team = teams_collection.find_one({"team_name": data.team_name})
     if not team:
@@ -76,20 +77,29 @@ def submit_answer(data: AnswerSubmission):
     new_score = team["score"] + (10 if is_correct else 0)
     teams_collection.update_one({"team_name": data.team_name}, {"$set": {"score": new_score}})
     
-    # Determine next step
-    if team["riddle_count"] < 3:
-        next_location = random.choice(LOCATIONS)
+    # If team has completed all 3 riddles, calculate total time
+    if team["riddle_count"] == 2:  # Last riddle attempt
+        completion_time = datetime.utcnow()
+        time_taken = completion_time - team["start_time"]
+
+        teams_collection.update_one(
+            {"team_name": data.team_name},
+            {"$set": {"completed": True, "completion_time": completion_time, "total_time": str(time_taken)}}
+        )
+        
+        return {"correct": is_correct, "score": new_score, "redirect": "thank_you", "total_time": str(time_taken)}
+    
+    else:
+        next_location = random.choice(["Library", "Sports Complex", "Cafeteria", "Main Gate", "Garden"])
         teams_collection.update_one({"team_name": data.team_name}, {"$inc": {"riddle_count": 1}})
         return {"correct": is_correct, "score": new_score, "next_location": next_location}
-    else:
-        teams_collection.update_one({"team_name": data.team_name}, {"$set": {"completed": True}})
-        return {"correct": is_correct, "score": new_score, "redirect": "thank_you"}
+
 
 class QRScan(BaseModel):
     team_name: str
     riddle_id: str
 
-@app.post("/unlock-next-riddle")
+@router.post("/unlock-next-riddle")
 def unlock_next_riddle(data: QRScan):
     team = teams_collection.find_one({"team_name": data.team_name})
     if not team:
@@ -103,7 +113,7 @@ def unlock_next_riddle(data: QRScan):
 
     return {"riddle_id": str(next_riddle["_id"]), "question": next_riddle["question"]}
 
-@app.get("/scoreboard")
+@router.get("/scoreboard")
 def get_scoreboard():
-    teams = teams_collection.find({}, {"_id": 0, "team_name": 1, "score": 1}).sort("score", -1)
+    teams = teams_collection.find({}, {"_id": 0, "team_name": 1, "score": 1, "total_time": 1}).sort("score", -1)
     return list(teams)
