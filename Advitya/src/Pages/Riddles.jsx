@@ -5,4 +5,4 @@ function Riddles() {
   )
 }
 
-export default Riddles
+export default Riddles;

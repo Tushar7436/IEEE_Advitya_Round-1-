@@ -15,9 +15,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<App />}> 
           <Route index element={<HomePage/>} />
-          <Route path="riddles" element={<Riddles/>} />
-          <Route path="qr-key" element={<MiddlePage />} />
-          <Route path="thank-you" element={<LastPage/>} />
+          <Route path="Riddles" element={<Riddles />} />
+          <Route path="MiddlePage" element={<MiddlePage />} />
+          <Route path="LastPage" element={<LastPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
