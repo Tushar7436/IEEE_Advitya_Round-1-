@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'; // Change here!
 import App from './App';
 import HomePage from './pages/HomePage';
 import Riddles from './pages/Riddles';
@@ -14,8 +14,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Router>
       <Routes>
         <Route path="/" element={<App />}> 
-          <Route index element={<HomePage/>} />
-          <Route path="Riddles" element={<Riddles />} />
+          <Route index element={<HomePage />} />
+          <Route path="riddles" element={<Riddles />} />
           <Route path="MiddlePage" element={<MiddlePage />} />
           <Route path="LastPage" element={<LastPage />} />
           <Route path="*" element={<NotFound />} />
