@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   base: "./",
   server: {
-    historyApiFallback: true, // Ensures correct routing in local dev
+    historyApiFallback: true, 
   },
   css: {
     postcss: './postcss.config.js',
