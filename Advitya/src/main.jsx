@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import MiddlePage from "./pages/MiddlePage";
-import RiddlePage from "./pages/Riddles";
-import LastPage from "./pages/LastPage";
+import HomePage from "./Pages/HomePage";
+import MiddlePage from "./Pages/MiddlePage";
+import RiddlePage from "./Pages/Riddles";
+import LastPage from "./Pages/LastPage";
 import "./index.css"; 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
