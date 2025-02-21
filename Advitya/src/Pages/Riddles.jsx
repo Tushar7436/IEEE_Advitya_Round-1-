@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 
@@ -7,6 +7,20 @@ const RiddlePage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [answer, setAnswer] = useState("");
+
+  useEffect(() => {
+    const handleBackButton = (event) => {
+      event.preventDefault();
+      navigate(1); // Push the user forward if they try to go back
+    };
+
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, [navigate]);
 
   const submitAnswer = async () => {
     if (!answer) return alert("Enter an answer!");
@@ -21,7 +35,9 @@ const RiddlePage = () => {
       if (response.data.redirect === "thank_you") {
         navigate("/thank-you");
       } else {
-        navigate("/middle", { state: { nextLocation: response.data.next_location, teamName: state.teamName } });
+        navigate("/middle", { 
+          state: { nextLocation: response.data.next_location, teamName: state.teamName } 
+        });
       }
     } catch (error) {
       alert("Error submitting answer. Try again!");

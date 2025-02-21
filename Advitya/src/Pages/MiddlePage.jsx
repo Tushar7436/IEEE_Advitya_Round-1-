@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
@@ -6,6 +6,20 @@ const MiddlePage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [key, setKey] = useState("");
+
+  useEffect(() => {
+    const handleBackButton = (event) => {
+      event.preventDefault();
+      navigate(1); // Push the user forward if they try to go back
+    };
+
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, [navigate]);
 
   const validateKey = async () => {
     if (!key) return alert("Enter the key!");
@@ -16,7 +30,9 @@ const MiddlePage = () => {
         riddle_id: key, // The key is the ObjectId of the next riddle
       });
 
-      navigate(`/riddle/${response.data.riddle_id}`, { state: { question: response.data.question, teamName: state.teamName } });
+      navigate(`/riddle/${response.data.riddle_id}`, { 
+        state: { question: response.data.question, teamName: state.teamName } 
+      });
     } catch (error) {
       alert("Invalid key. Try again!");
     }
