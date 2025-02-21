@@ -10,7 +10,7 @@ const HomePage = () => {
     if (!teamName) return alert("Enter your team name!");
 
     try {
-      const response = await axios.post("http://localhost:8000/game/start-game", {
+      const response = await axios.post("https://ieeeadvityaround-1-production.up.railway.app/game/start-game", {
         team_name: teamName,
       });
 

@@ -26,7 +26,7 @@ const RiddlePage = () => {
     if (!answer) return alert("Enter an answer!");
 
     try {
-      const response = await axios.post("http://localhost:8000/game/submit-answer", {
+      const response = await axios.post("https://ieeeadvityaround-1-production.up.railway.app/game/submit-answer", {
         team_name: state.teamName,
         riddle_id: riddleId,
         answer: answer,

@@ -25,7 +25,7 @@ const MiddlePage = () => {
     if (!key) return alert("Enter the key!");
 
     try {
-      const response = await axios.post("http://localhost:8000/game/unlock-next-riddle", {
+      const response = await axios.post("https://ieeeadvityaround-1-production.up.railway.app/game/unlock-next-riddle", {
         team_name: state.teamName,
         riddle_id: key, // The key is the ObjectId of the next riddle
       });

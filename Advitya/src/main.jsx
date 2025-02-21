@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage";
 import MiddlePage from "./pages/MiddlePage";
 import RiddlePage from "./pages/Riddles";
 import LastPage from "./pages/LastPage";
-import "./index.css"; // Ensure Tailwind is properly set up
+import "./index.css"; 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
