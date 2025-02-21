@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
+import { toast } from "sonner";
 
 const RiddlePage = () => {
   const { riddleId } = useParams();
@@ -9,21 +10,14 @@ const RiddlePage = () => {
   const [answer, setAnswer] = useState("");
 
   useEffect(() => {
-    const handleBackButton = (event) => {
-      event.preventDefault();
-      navigate(1); // Push the user forward if they try to go back
-    };
-
     window.history.pushState(null, null, window.location.href);
-    window.addEventListener("popstate", handleBackButton);
-
-    return () => {
-      window.removeEventListener("popstate", handleBackButton);
-    };
-  }, [navigate]);
+    window.addEventListener("popstate", () => {
+      window.history.pushState(null, null, window.location.href);
+    });
+  }, []);
 
   const submitAnswer = async () => {
-    if (!answer) return alert("Enter an answer!");
+    if (!answer) return toast.error("Enter an answer!");
 
     try {
       const response = await axios.post("https://ieeeadvityaround-1-production.up.railway.app/game/submit-answer", {
@@ -33,14 +27,14 @@ const RiddlePage = () => {
       });
 
       if (response.data.redirect === "thank_you") {
+        toast.success("Game completed! Redirecting...");
         navigate("/thank-you");
       } else {
-        navigate("/middle", { 
-          state: { nextLocation: response.data.next_location, teamName: state.teamName } 
-        });
+        toast.success("Correct! Next location is revealed.");
+        navigate("/middle", { state: { nextLocation: response.data.next_location, teamName: state.teamName } });
       }
     } catch (error) {
-      alert("Error submitting answer. Try again!");
+      toast.error("Error submitting answer. Try again!");
     }
   };
 

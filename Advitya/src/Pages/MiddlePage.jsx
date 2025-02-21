@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { toast } from "sonner";
 
 const MiddlePage = () => {
   const navigate = useNavigate();
@@ -8,33 +9,27 @@ const MiddlePage = () => {
   const [key, setKey] = useState("");
 
   useEffect(() => {
-    const handleBackButton = (event) => {
-      event.preventDefault();
-      navigate(1); // Push the user forward if they try to go back
-    };
-
     window.history.pushState(null, null, window.location.href);
-    window.addEventListener("popstate", handleBackButton);
-
-    return () => {
-      window.removeEventListener("popstate", handleBackButton);
-    };
-  }, [navigate]);
+    window.addEventListener("popstate", () => {
+      window.history.pushState(null, null, window.location.href);
+    });
+  }, []);
 
   const validateKey = async () => {
-    if (!key) return alert("Enter the key!");
+    if (!key) return toast.error("Enter the key!");
 
     try {
       const response = await axios.post("https://ieeeadvityaround-1-production.up.railway.app/game/unlock-next-riddle", {
         team_name: state.teamName,
-        riddle_id: key, // The key is the ObjectId of the next riddle
+        riddle_id: key,
       });
 
-      navigate(`/riddle/${response.data.riddle_id}`, { 
-        state: { question: response.data.question, teamName: state.teamName } 
+      toast.success("Key validated! Redirecting...");
+      navigate(`/riddle/${response.data.riddle_id}`, {
+        state: { question: response.data.question, teamName: state.teamName }
       });
     } catch (error) {
-      alert("Invalid key. Try again!");
+      toast.error("Invalid key. Try again!");
     }
   };
 

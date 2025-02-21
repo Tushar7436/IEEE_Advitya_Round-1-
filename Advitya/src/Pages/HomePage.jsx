@@ -1,22 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "sonner";
 
 const HomePage = () => {
   const [teamName, setTeamName] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener("popstate", () => {
+      window.history.pushState(null, null, window.location.href);
+    });
+  }, []);
+
   const startGame = async () => {
-    if (!teamName) return alert("Enter your team name!");
+    if (!teamName) return toast.error("Enter your team name!");
 
     try {
       const response = await axios.post("https://ieeeadvityaround-1-production.up.railway.app/game/start-game", {
         team_name: teamName,
       });
 
+      toast.success("Game started! Redirecting...");
       navigate(`/riddle/${response.data.riddle_id}`, { state: { question: response.data.question, teamName } });
     } catch (error) {
-      alert("Error starting the game. Try again!");
+      toast.error("Error starting the game. Try again!");
     }
   };
 
