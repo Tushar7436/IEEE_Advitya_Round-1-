@@ -61,8 +61,14 @@ def submit_answer(data: AnswerSubmission):
     new_score = team["score"] + (10 if is_correct else 0)
     teams_collection.update_one({"team_name": data.team_name}, {"$set": {"score": new_score}})
     
-    if team["riddle_count"] < 3:
-        next_location = random.choice(["Library", "Sports Complex", "Cafeteria", "Main Gate", "Garden"])
+    if team["riddle_count"] < 5:
+        next_location = random.choice([
+            "By the Sound of Music : Near the tools that create melodies or measure with accuracy. which instruments are around ? ",
+             "The Heart of Connectvity: The Strongest WIFI signal is here. Find the place where does everyone go to stay connected.",
+              "Facing the Glass Fortress: Standing right across from the transparent walls- What's in its sight ?", 
+              "The chaos zone of AB: The Loudest, most restless spot in academic block, Silence is rare here. Where is it?", 
+              "Where money talks: Close to the hub of transaction and finance.What spot fits the bill?"
+            ])
         teams_collection.update_one({"team_name": data.team_name}, {"$inc": {"riddle_count": 1}})
         return {"correct": is_correct, "score": new_score, "next_location": next_location}
     else:
